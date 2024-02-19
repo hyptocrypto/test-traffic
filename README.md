@@ -1,7 +1,7 @@
 ## Simple app to test [traefik](https://github.com/traefik/traefik) as a K8s ingress/gateway
 
 ### Run locally
-* Have helm and some k8s service running, DockerDesktop or Minikube work well. 
+* Have helm and some k8s cluster running, DockerDesktop or Minikube work well. 
 * Run the start script. This will helm install traefik and install some demo apps & config.
 ```shell
 /bin/bash run.sh
