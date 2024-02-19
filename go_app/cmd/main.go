@@ -12,19 +12,20 @@ type SharedMemory struct {
 }
 
 func main() {
-	http.HandleFunc("/", do_work)
+	http.HandleFunc("/do_work", do_work)
 	http.ListenAndServe("0.0.0.0:8000", nil)
 }
 
 func do_work(w http.ResponseWriter, req *http.Request) {
+	Iter := 1000
 	sharedMemory := SharedMemory{data: 0}
 
 	var wg sync.WaitGroup
-	wg.Add(1000)
+	wg.Add(Iter)
 
 	resultChan := make(chan int)
 
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < Iter; i++ {
 		go func() {
 			result := updateSharedMemory(&sharedMemory)
 			resultChan <- result

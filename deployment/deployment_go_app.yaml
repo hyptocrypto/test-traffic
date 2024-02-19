@@ -35,19 +35,30 @@ spec:
 
 ---
 
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
 metadata:
-  name: go-app-service
-
+  name: stripprefix-go
 spec:
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Exact
-            backend:
-              service:
-                name:  go-app-service
-                port:
-                  number: 8000
+  stripPrefix:
+    prefixes:
+      - /go
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: go-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/go`)
+      kind: Rule
+      priority: 1
+      middlewares:
+        - name: stripprefix-go
+      services:
+          - name: go-app-service
+            port: 8000
