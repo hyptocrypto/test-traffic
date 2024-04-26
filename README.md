@@ -11,3 +11,4 @@
 kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
 kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 8000:8000
 ```
+There will be two simple wep apps running. A Golang app that is under the api namespace /go. And a Python app running under the api namespace /python. Traefik will route requests to the respective application under the same host name (127.0.0.1). 
