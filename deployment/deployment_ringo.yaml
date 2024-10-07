@@ -1,64 +1,64 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: python-app
+  name: ringo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: python-app
+      app: ringo
   template:
     metadata:
       labels:
-        app: python-app
+        app: ringo
     spec:
       containers:
-      - name: python-app
-        image: docker.io/germanp34e/python-app:latest
+      - name: ringo
+        image: docker.io/germanp34e/ringo:latest
         ports:
         - name: web  
-          containerPort: 5000
+          containerPort: 7000
 ---
 
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: python-app-service
+  name: ringo-service
 spec:
   selector:
-    app: python-app
+    app: ringo
   ports:
     - protocol: TCP
-      port: 5000
-      targetPort: 5000
+      port: 7000
+      targetPort: 7000
 
 ---
 
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: stripprefix-python
+  name: stripprefix-ringo
 spec:
   stripPrefix:
     prefixes:
-      - /python
----
+      - /ringo
 
+---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: python-ingress
+  name: go-ingress
   namespace: default
 spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/python`)
+    - match: PathPrefix(`/ringo`)
       kind: Rule
       priority: 1
       middlewares:
-        - name: stripprefix-python
+        - name: stripprefix-ringo
       services:
-          - name: python-app-service
-            port: 5000
+          - name: ringo-service
+            port: 7000
