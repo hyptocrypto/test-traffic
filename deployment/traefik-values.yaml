@@ -1,0 +1,6 @@
+dashboard:
+  enabled: true
+
+additionalArguments:
+  - "--api.insecure=true"
+  - "--api.dashboard=true"

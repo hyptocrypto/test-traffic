@@ -48,7 +48,7 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: go-ingress
+  name: ringo-ingress
   namespace: default
 spec:
   entryPoints:

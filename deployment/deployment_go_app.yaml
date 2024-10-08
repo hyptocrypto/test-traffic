@@ -17,7 +17,7 @@ spec:
         image: docker.io/germanp34e/go-app:latest
         ports:
         - name: web  
-          containerPort: 8000
+          containerPort: 7000
 ---
 
 
@@ -30,8 +30,8 @@ spec:
     app: go-app
   ports:
     - protocol: TCP
-      port: 8000
-      targetPort: 8000
+      port: 7000
+      targetPort: 7000
 
 ---
 
@@ -61,4 +61,4 @@ spec:
         - name: stripprefix-go
       services:
           - name: go-app-service
-            port: 8000
+            port: 7000

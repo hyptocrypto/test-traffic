@@ -13,7 +13,7 @@ type SharedMemory struct {
 
 func main() {
 	http.HandleFunc("/do_work", do_work)
-	http.ListenAndServe("0.0.0.0:8000", nil)
+	http.ListenAndServe("0.0.0.0:7000", nil)
 }
 
 func do_work(w http.ResponseWriter, req *http.Request) {
