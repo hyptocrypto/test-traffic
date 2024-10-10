@@ -15,17 +15,27 @@ helm repo update
 # Deploy traefik onto the culster
 helm install traefik traefik/traefik --namespace traefik --set dashboard.enabled=true --set service.type=ClusterIP --set entryPoints.web.address=:9000
 helm upgrade --install traefik traefik/traefik -f deployment/traefik-values.yaml -n traefik
-echo "traefik configured!!\n"
 
 # Deploy prometheus onto the culster
 helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring
-echo "prometheus configured!!\n"
 
 # Deploy grafana onto the cluster
 helm install grafana grafana/grafana --namespace monitoring --set service.type=NodePort --set persistence.enabled=true --set adminPassword='admin'
-echo "grafana configured!!\n"
 
-# Deploy demo appls
+# Wait for all core services to be ready
+kubectl wait --namespace traefik --for=condition=available --timeout=120s deployment/traefik
+echo "Traefik service is ready.\n"
+kubectl wait --namespace monitoring --for=condition=available --timeout=120s deployment/grafana
+echo "Grafana service is ready.\n"
+kubectl wait --namespace monitoring --for=condition=available --timeout=120s deployment/prometheus-kube-prometheus-operator
+echo "Prometheus service is ready.\n"
+
+echo "Forwarding ports...\n"
+sudo kubectl port-forward -n traefik svc/traefik 80:80 >/dev/null 2>&1 &
+kubectl port-forward -n monitoring svc/grafana 3000:80 >/dev/null 2>&1 &
+kubectl port-forward -n monitoring service/prometheus-kube-prometheus-prometheus 9090:9090 >/dev/null 2>&1 &
+
+# Deploy demo apps
 kubectl apply -f deployment/deployment_go_app.yaml
 echo "\n---------------------------\n"
 kubectl apply -f deployment/deployment_ringo.yaml
